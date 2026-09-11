@@ -19,18 +19,33 @@ const CARD_TYPES = [
 ];
 
 const CARD_EMOJIS: Record<string, string> = {
-  '안전기지': '🏠',
-  '도화선': '💥',
-  '거울': '🪞',
-  '배터리': '🔋',
-  '네비': '🧭',
-  '방패': '🛡️',
-  '개그담당': '😄',
-  '솔직봇': '💬',
-  '거리두기': '↔️',
-  '썸온도': '🌡️',
-  '멘토': '📚',
-  '라이벌': '⚔️',
+  '안전기지': '☽',
+  '도화선': '✶',
+  '거울': '◈',
+  '배터리': '⚡',
+  '네비': '✦',
+  '방패': '☬',
+  '개그담당': '🎭',
+  '솔직봇': '✎',
+  '거리두기': '◌',
+  '썸온도': '❣',
+  '멘토': '📖',
+  '라이벌': '⚔',
+};
+
+const CARD_COLORS: Record<string, { accent: string; bg: string; border: string }> = {
+  '안전기지': { accent: '#9333ea', bg: 'bg-purple-900/20', border: 'border-purple-500/50' },
+  '도화선': { accent: '#dc2626', bg: 'bg-red-900/20', border: 'border-red-500/50' },
+  '거울': { accent: '#0891b2', bg: 'bg-cyan-900/20', border: 'border-cyan-500/50' },
+  '배터리': { accent: '#eab308', bg: 'bg-yellow-900/20', border: 'border-yellow-500/50' },
+  '네비': { accent: '#3b82f6', bg: 'bg-blue-900/20', border: 'border-blue-500/50' },
+  '방패': { accent: '#059669', bg: 'bg-emerald-900/20', border: 'border-emerald-500/50' },
+  '개그담당': { accent: '#f59e0b', bg: 'bg-amber-900/20', border: 'border-amber-500/50' },
+  '솔직봇': { accent: '#8b5cf6', bg: 'bg-violet-900/20', border: 'border-violet-500/50' },
+  '거리두기': { accent: '#6b7280', bg: 'bg-gray-900/20', border: 'border-gray-500/50' },
+  '썸온도': { accent: '#ec4899', bg: 'bg-pink-900/20', border: 'border-pink-500/50' },
+  '멘토': { accent: '#10b981', bg: 'bg-green-900/20', border: 'border-green-500/50' },
+  '라이벌': { accent: '#ef4444', bg: 'bg-rose-900/20', border: 'border-rose-500/50' },
 };
 
 interface Card {
@@ -174,10 +189,10 @@ export default function RoomPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-purple-950 dark:via-pink-950 dark:to-blue-950 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">로딩 중...</p>
+      <div className="min-h-screen flex items-center justify-center relative">
+        <div className="text-center relative z-10">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 gold-border mx-auto mb-4"></div>
+          <p className="text-gray-300">로딩 중...</p>
         </div>
       </div>
     );
@@ -185,16 +200,20 @@ export default function RoomPage() {
 
   if (error || !room) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-purple-950 dark:via-pink-950 dark:to-blue-950 flex items-center justify-center px-4">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
-          <div className="text-6xl mb-4">😢</div>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+      <div className="min-h-screen flex items-center justify-center px-4 relative">
+        <div className="tarot-card rounded-2xl p-8 max-w-md w-full text-center relative z-10">
+          <div className="text-6xl mb-4">✦</div>
+          <h2 className="text-2xl font-bold gold-accent mb-2">
             오류가 발생했습니다
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
+          <p className="text-gray-400 mb-6">{error}</p>
           <button
             onClick={() => router.push('/')}
-            className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg transition"
+            className="gold-accent font-bold py-3 px-6 rounded-lg transition"
+            style={{ 
+              background: 'linear-gradient(135deg, rgba(109, 40, 217, 0.4) 0%, rgba(45, 27, 78, 0.6) 100%)',
+              border: '2px solid var(--tarot-gold)',
+            }}
           >
             홈으로 돌아가기
           </button>
@@ -208,34 +227,34 @@ export default function RoomPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-purple-950 dark:via-pink-950 dark:to-blue-950">
-      <div className="container mx-auto px-4 py-8 max-w-2xl">
+    <div className="min-h-screen relative" style={{ paddingBottom: '2rem' }}>
+      <div className="container mx-auto px-4 py-8 max-w-2xl relative z-10">
         {/* Header */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-6">
+        <div className="tarot-card rounded-2xl p-6 mb-6">
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
-              <h1 className="text-2xl font-bold text-purple-900 dark:text-purple-100 mb-2">
+              <h1 className="text-2xl font-bold gold-accent mb-2">
                 {room.question}
               </h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-gray-400">
                 만료: {new Date(room.expiresAt).toLocaleDateString('ko-KR')}
               </p>
             </div>
           </div>
 
           {isHost && (
-            <div className="flex gap-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex gap-2 mt-4 pt-4 border-t border-gray-700">
               <button
                 onClick={handleCopyLink}
-                className="flex-1 bg-purple-100 hover:bg-purple-200 dark:bg-purple-900 dark:hover:bg-purple-800 text-purple-700 dark:text-purple-200 font-medium py-2 px-4 rounded-lg transition text-sm"
+                className="flex-1 bg-purple-900/40 hover:bg-purple-800/60 border border-purple-500/30 text-purple-200 font-medium py-2 px-4 rounded-lg transition text-sm"
               >
-                {showCopied ? '✓ 복사됨!' : '🔗 링크 복사'}
+                {showCopied ? '✓ 복사됨!' : '✦ 링크 복사'}
               </button>
               <button
                 onClick={handleDeleteRoom}
-                className="flex-1 bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:hover:bg-red-800 text-red-700 dark:text-red-200 font-medium py-2 px-4 rounded-lg transition text-sm"
+                className="flex-1 bg-red-900/40 hover:bg-red-800/60 border border-red-500/30 text-red-200 font-medium py-2 px-4 rounded-lg transition text-sm"
               >
-                🗑️ 방 삭제
+                ✕ 방 삭제
               </button>
             </div>
           )}
@@ -245,36 +264,52 @@ export default function RoomPage() {
         {availableCards.length > 0 && (
           <button
             onClick={() => setShowPicker(!showPicker)}
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition mb-6"
+            className="w-full gold-accent font-bold py-5 px-6 rounded-xl shadow-lg hover:shadow-2xl transition mb-6 text-lg tracking-wide"
+            style={{ 
+              background: 'linear-gradient(135deg, rgba(109, 40, 217, 0.4) 0%, rgba(45, 27, 78, 0.6) 100%)',
+              border: '2px solid var(--tarot-gold)',
+              boxShadow: '0 0 30px rgba(212, 175, 55, 0.3)'
+            }}
           >
-            {showPicker ? '카드 선택 취소' : '🎴 카드 선택하기'}
+            {showPicker ? '✕ 선택 취소' : '✦ 카드 뽑기'}
           </button>
         )}
 
         {/* Card Picker */}
         {showPicker && (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-6">
-            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+          <div className="tarot-card rounded-2xl p-6 mb-6">
+            <h2 className="text-xl font-bold gold-accent mb-2 text-center">
               카드를 선택하세요
             </h2>
+            <p className="text-sm text-gray-400 text-center mb-6">마음이 끌리는 카드 하나를 고르세요</p>
 
-            <div className="grid grid-cols-3 gap-3 mb-4">
-              {availableCards.map((cardType) => (
-                <button
-                  key={cardType}
-                  onClick={() => setSelectedCard(cardType)}
-                  className={`p-4 rounded-lg border-2 transition ${
-                    selectedCard === cardType
-                      ? 'border-purple-600 bg-purple-50 dark:bg-purple-900/30'
-                      : 'border-gray-200 dark:border-gray-600 hover:border-purple-300 dark:hover:border-purple-700'
-                  }`}
-                >
-                  <div className="text-3xl mb-1">{CARD_EMOJIS[cardType]}</div>
-                  <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {cardType}
-                  </div>
-                </button>
-              ))}
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              {availableCards.map((cardType) => {
+                const colors = CARD_COLORS[cardType];
+                const isSelected = selectedCard === cardType;
+                return (
+                  <button
+                    key={cardType}
+                    onClick={() => setSelectedCard(cardType)}
+                    className={`tarot-card-mini rounded-lg p-4 transition-all ${
+                      isSelected ? colors.border : ''
+                    }`}
+                    style={isSelected ? { 
+                      borderColor: colors.accent,
+                      boxShadow: `0 0 20px ${colors.accent}60`
+                    } : {}}
+                  >
+                    <div className="text-3xl mb-2 text-center" style={{ 
+                      color: isSelected ? colors.accent : 'var(--tarot-gold)'
+                    }}>
+                      {CARD_EMOJIS[cardType]}
+                    </div>
+                    <div className="text-xs font-medium text-gray-300 text-center">
+                      {cardType}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
 
             <input
@@ -283,11 +318,11 @@ export default function RoomPage() {
               onChange={(e) => setNickname(e.target.value)}
               placeholder="닉네임 (선택사항)"
               maxLength={20}
-              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-lg mb-4 focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              className="w-full px-4 py-3 border-2 border-gray-700 rounded-lg mb-4 focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-900/50 text-white placeholder-gray-500"
             />
 
             {error && (
-              <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg text-sm">
+              <div className="mb-4 p-3 bg-red-900/30 border border-red-500/50 text-red-300 rounded-lg text-sm">
                 {error}
               </div>
             )}
@@ -295,64 +330,96 @@ export default function RoomPage() {
             <button
               onClick={handlePickCard}
               disabled={!selectedCard || isSubmitting}
-              className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition disabled:cursor-not-allowed"
+              className="w-full gold-accent font-bold py-4 px-6 rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed"
+              style={{ 
+                background: selectedCard ? 'linear-gradient(135deg, rgba(109, 40, 217, 0.5) 0%, rgba(45, 27, 78, 0.7) 100%)' : 'rgba(75, 85, 99, 0.3)',
+                border: '2px solid var(--tarot-gold-dim)',
+                boxShadow: selectedCard ? '0 0 20px rgba(212, 175, 55, 0.3)' : 'none'
+              }}
             >
-              {isSubmitting ? '처리 중...' : '선택 완료'}
+              {isSubmitting ? '처리 중...' : '✦ 선택 완료'}
             </button>
           </div>
         )}
 
         {/* Cards List */}
         {room.cards.length > 0 ? (
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 px-1">
-              선택된 카드들 ({room.cards.length}/12)
+          <div className="space-y-5">
+            <h2 className="text-xl font-bold gold-accent px-1 text-center mb-6">
+              ✦ 선택된 카드들 ({room.cards.length}/12)
             </h2>
-            {room.cards.map((card) => (
-              <div
-                key={card.id}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="text-4xl">{CARD_EMOJIS[card.cardType]}</div>
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200">
-                        {card.cardType}
-                      </h3>
-                      {card.nickname && (
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          by {card.nickname}
-                        </p>
-                      )}
+            {room.cards.map((card) => {
+              const colors = CARD_COLORS[card.cardType];
+              return (
+                <div
+                  key={card.id}
+                  className="tarot-card rounded-2xl overflow-hidden shadow-2xl"
+                  style={{ 
+                    borderColor: colors.accent,
+                    boxShadow: `0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px ${colors.accent}40`
+                  }}
+                >
+                  {/* Card Header */}
+                  <div 
+                    className="p-6 pb-4 text-center border-b"
+                    style={{ 
+                      background: `linear-gradient(135deg, ${colors.accent}30 0%, transparent 100%)`,
+                      borderColor: `${colors.accent}30`
+                    }}
+                  >
+                    <div className="text-6xl mb-3" style={{ color: colors.accent }}>
+                      {CARD_EMOJIS[card.cardType]}
+                    </div>
+                    <h3 className="text-2xl font-bold gold-accent mb-2">
+                      {card.cardType}
+                    </h3>
+                    {card.nickname && (
+                      <p className="text-sm text-gray-400">
+                        ✎ {card.nickname}
+                      </p>
+                    )}
+                  </div>
+                  
+                  {/* Card Body - Reading */}
+                  <div className="p-6">
+                    <div className="text-gray-200 whitespace-pre-wrap leading-relaxed text-center">
+                      {card.reading}
                     </div>
                   </div>
-                  {isHost && (
-                    <button
-                      onClick={() => handleHideCard(card.id)}
-                      className="text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition text-sm"
-                    >
-                      숨기기
-                    </button>
-                  )}
+
+                  {/* Card Footer */}
+                  <div 
+                    className="px-6 py-4 flex items-center justify-between border-t"
+                    style={{ borderColor: `${colors.accent}20` }}
+                  >
+                    <div className="text-xs text-gray-500">
+                      {new Date(card.createdAt).toLocaleDateString('ko-KR', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </div>
+                    {isHost && (
+                      <button
+                        onClick={() => handleHideCard(card.id)}
+                        className="text-xs text-gray-500 hover:text-red-400 transition"
+                      >
+                        숨기기
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <div className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
-                  {card.reading}
-                </div>
-                <div className="text-xs text-gray-400 dark:text-gray-500 mt-4">
-                  {new Date(card.createdAt).toLocaleString('ko-KR')}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 text-center">
-            <div className="text-6xl mb-4">🎴</div>
-            <p className="text-gray-600 dark:text-gray-400">
+          <div className="tarot-card rounded-2xl p-12 text-center">
+            <div className="tarot-card-back w-32 h-48 mx-auto rounded-xl mb-6 relative"></div>
+            <p className="text-gray-300 text-lg mb-2">
               아직 선택된 카드가 없습니다
             </p>
-            <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-              위의 버튼을 눌러 카드를 선택해보세요
+            <p className="text-sm text-gray-500">
+              위의 버튼을 눌러 카드를 뽑아보세요
             </p>
           </div>
         )}
