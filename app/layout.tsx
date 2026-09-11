@@ -1,12 +1,16 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { LANDING_TITLE, LANDING_DESCRIPTION, BUILD_VERSION } from '@/lib/copy';
+
+// Build version: forces Railway cache invalidation
+console.log('Build version:', BUILD_VERSION);
 
 export const metadata: Metadata = {
-  title: '너는 나한테 어떤 사람?',
-  description: '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.',
+  title: LANDING_TITLE,
+  description: LANDING_DESCRIPTION,
   openGraph: {
-    title: '너는 나한테 어떤 사람?',
-    description: '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.',
+    title: LANDING_TITLE,
+    description: LANDING_DESCRIPTION,
     type: 'website',
     locale: 'ko_KR',
     images: [
@@ -20,8 +24,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: '너는 나한테 어떤 사람?',
-    description: '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.',
+    title: LANDING_TITLE,
+    description: LANDING_DESCRIPTION,
   },
 };
 

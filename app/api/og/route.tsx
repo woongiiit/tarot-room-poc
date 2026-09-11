@@ -1,5 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
+import { LANDING_TITLE, LANDING_TAGLINE } from '@/lib/copy';
 
 export const runtime = 'edge';
 
@@ -23,7 +24,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const roomId = searchParams.get('roomId');
 
-    let title = '너는 나한테 어떤 사람?';
+    let title = LANDING_TITLE;
     let cardName = '';
     let cardEmoji = '🔮';
     let hook = '';
@@ -60,7 +61,7 @@ export async function GET(request: NextRequest) {
               ? firstLine.substring(0, 60) + '...' 
               : firstLine;
             title = trimmed;
-            hook = '타로 한 장으로 말해줘';
+            hook = LANDING_TAGLINE;
           }
         }
       } catch (error) {
@@ -179,7 +180,7 @@ export async function GET(request: NextRequest) {
               display: 'flex',
             }}
           >
-            타로 한 장으로 말해줘
+            {LANDING_TAGLINE}
           </div>
         </div>
       ),
@@ -207,7 +208,7 @@ export async function GET(request: NextRequest) {
             fontFamily: 'system-ui, sans-serif',
           }}
         >
-          🔮 너는 나한테 어떤 사람?
+          🔮 {LANDING_TITLE}
         </div>
       ),
       {
