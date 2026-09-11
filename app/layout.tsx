@@ -11,19 +11,19 @@ const getMetadataBase = (): string | undefined => {
 
 export const metadata: Metadata = {
     metadataBase: getMetadataBase() ? new URL(getMetadataBase()!) : undefined,
-    title: '너는 나한테 떤 사람?',
-    description: '로 한 장으로 해줘. 링크  네 카드도 뽑아봐.',
+    title: '너는 나한테 어떤 사람?',
+    description: '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.',
     openGraph: {
-          title: '너는 나한테 어 사?',
-          description: '타로 한 장으로 말해줘. 링크 열고 네 카드도 봐.',
+          title: '너는 나한테 어떤 사람?',
+          description: '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.',
           type: 'website',
           locale: 'ko_KR',
-          images: [{ url: '/api/og', width: 1200, height: 630, alt: '타 방' }],
+          images: [{ url: '/api/og', width: 1200, height: 630, alt: '타로 방' }],
     },
     twitter: {
           card: 'summary_large_image',
-          title: '너는 나한 어떤 사람?',
-          description: '타로  장으 말. 링크 열고 네 드 뽑아봐.',
+          title: '너는 나한테 어떤 사람?',
+          description: '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.',
     },
 };
 
