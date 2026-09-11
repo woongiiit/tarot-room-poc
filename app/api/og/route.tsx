@@ -4,204 +4,59 @@ import { NextRequest } from 'next/server';
 export const runtime = 'edge';
 
 const CARD_EMOJIS: Record<string, string> = {
-  '안전기지': '🏠',
-  '도화선': '💥',
-  '거울': '🪞',
-  '배터리': '🔋',
-  '네비': '🧭',
-  '방패': '🛡️',
-  '개그담당': '😄',
-  '솔직봇': '💬',
-  '거리두기': '↔️',
-  '썸온도': '🌡️',
-  '멘토': '📚',
-  '라이벌': '⚔️',
+    '안전기지': '', '도선': '', '거울': '', '배터리': '��',
+    '네비': '', '방패': '🛡', '개당': '', '솔직봇': '��',
+    '거리두기': '↔️', '썸': '️', '토': '', '라이벌': '⚔️',
 };
 
 export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = request.nextUrl;
-    const roomId = searchParams.get('roomId');
-
-    if (!roomId) {
-      return new ImageResponse(
-        (
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-              height: '100%',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              fontFamily: 'sans-serif',
-            }}
-          >
-            <div style={{ fontSize: 80, marginBottom: 20 }}>🔮</div>
-            <div style={{ fontSize: 48, fontWeight: 'bold', color: 'white' }}>
-              관계 역할 타로 방
-            </div>
-            <div style={{ fontSize: 24, color: 'rgba(255,255,255,0.9)', marginTop: 20 }}>
-              당신은 그 사람에게 어떤 존재인가요?
-            </div>
-          </div>
-        ),
-        {
-          width: 1200,
-          height: 630,
-        }
+    try {
+          const roomId = request.nextUrl.searchParams.get('roomId');
+          let title = '너는 나테 어떤 사?';
+          let cardName = '';
+          let cardEmoji = '';
+          let hook = '';
+          let nickname = '';
+      
+          if (roomId) {
+                  try {
+                            const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_BASE_URL || process.env.APP_URL || (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : 'http://localhost:3000');
+                            const response = await fetch(`${baseUrl}/api/rooms/${roomId}`, { cache: 'no-store' });
+                            if (response.ok) {
+                                        const room = await response.json();
+                                        if (room.cards && room.cards.length > 0) {
+                                                      const latestCard = room.cards[room.cards.length - 1];
+                                                      cardName = latestCard.cardType;
+                                                      cardEmoji = CARD_EMOJIS[cardName] || '';
+                                                      nickname = latestCard.nickname || '';
+                                                      const lines = (latestCard.reading || '').split('\n').filter((l: string) => l.trim());
+                                                      hook = lines[0] || '';
+                                                      title = nickname ? `${nickname}의 타로 — 너는 나한테 ${cardName}` : `타로  너는 나한테 ${cardName}`;
+                                        } else {
+                                                      const firstLine = (room.question || '').split('\n')[0] || '는 나한테 어떤 사람?';
+                                                      title = firstLine.length > 60 ? `${firstLine.substring(0, 60)}...` : firstLine;
+                                                      hook = '타  장으로 말해줘';
+                                        }
+                            }
+                  } catch (error) {
+                            console.error('Error fetching room for OG image:', error);
+                  }
+          }
+      
+          return new ImageResponse(
+                  <div style={{ width: '1200px', height: '630px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #4a2c6e 100%)', color: '#ffffff', fontFamily: 'system-ui, sans-serif', position: 'relative' }}>
+                      <div style={{ fontSize: '180px', marginBottom: '30px', display: 'flex' }}>{cardEmoji}</div>
+                      <div style={{ fontSize: cardName ? '56px' : '68px', fontWeight: 'bold', textAlign: 'center', maxWidth: '1000px', marginBottom: '20px', color: '#ffd700', display: 'flex' }}>{title}</div>
+              {hook && <div style={{ fontSize: '36px', textAlign: 'center', maxWidth: '900px', color: '#e0d0ff', display: 'flex' }}>{hook.length > 80 ? `${hook.substring(0, 80)}...` : hook}</div>}
+                      <div style={{ position: 'absolute', bottom: '40px', fontSize: '28px', color: '#b0a0d0', display: 'flex' }}>타로  장으로 말해줘</div>
+                    </div>,
+            { width: 1200, height: 630 }
       );
-    }
-
-    // Fetch room data
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
-                    process.env.NEXT_PUBLIC_APP_URL || 
-                    process.env.APP_URL || 
-                    'http://localhost:3000';
-    
-    const response = await fetch(`${baseUrl}/api/rooms/${roomId}`, {
-      cache: 'no-store',
-    });
-
-    if (!response.ok) {
-      throw new Error('Room not found');
-    }
-
-    const room = await response.json();
-
-    // If room has cards, show first card
-    if (room.cards && room.cards.length > 0) {
-      const firstCard = room.cards[0];
-      const nickname = firstCard.nickname || '익명';
-      const emoji = CARD_EMOJIS[firstCard.cardType] || '🎴';
-
+} catch (error) {
+      console.error('Error generating OG image:', error);
       return new ImageResponse(
-        (
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-              height: '100%',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              fontFamily: 'sans-serif',
-              padding: 60,
-            }}
-          >
-            <div style={{ fontSize: 120, marginBottom: 30 }}>{emoji}</div>
-            <div
-              style={{
-                fontSize: 48,
-                fontWeight: 'bold',
-                color: 'white',
-                marginBottom: 20,
-                textAlign: 'center',
-              }}
-            >
-              {nickname}의 타로
-            </div>
-            <div
-              style={{
-                fontSize: 36,
-                color: 'rgba(255,255,255,0.95)',
-                textAlign: 'center',
-                marginBottom: 20,
-              }}
-            >
-              너는 나한테 {firstCard.cardType}
-            </div>
-            <div
-              style={{
-                fontSize: 24,
-                color: 'rgba(255,255,255,0.8)',
-                textAlign: 'center',
-                maxWidth: 900,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                display: '-webkit-box',
-                WebkitLineClamp: 3,
-                WebkitBoxOrient: 'vertical',
-              }}
-            >
-              {firstCard.reading}
-            </div>
-          </div>
-        ),
-        {
-          width: 1200,
-          height: 630,
-        }
-      );
-    }
-
-    // No cards yet, show question
-    return new ImageResponse(
-      (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            height: '100%',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            fontFamily: 'sans-serif',
-            padding: 60,
-          }}
-        >
-          <div style={{ fontSize: 100, marginBottom: 40 }}>🔮</div>
-          <div
-            style={{
-              fontSize: 52,
-              fontWeight: 'bold',
-              color: 'white',
-              textAlign: 'center',
-              marginBottom: 30,
-              maxWidth: 900,
-            }}
-          >
-            {room.question}
-          </div>
-          <div style={{ fontSize: 28, color: 'rgba(255,255,255,0.9)' }}>
-            관계 역할 타로 방
-          </div>
-        </div>
-      ),
-      {
-        width: 1200,
-        height: 630,
-      }
+              <div style={{ width: '1200px', height: '630px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #4a2c6e 100%)', color: '#ffd700', fontSize: '72px', fontWeight: 'bold', fontFamily: 'system-ui, sans-serif' }}> 너는 나한테 어떤 람?</div>,
+        { width: 1200, height: 630 }
     );
-  } catch (error) {
-    // Return a generic error image
-    return new ImageResponse(
-      (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            height: '100%',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            fontFamily: 'sans-serif',
-          }}
-        >
-          <div style={{ fontSize: 80, marginBottom: 20 }}>🔮</div>
-          <div style={{ fontSize: 48, fontWeight: 'bold', color: 'white' }}>
-            관계 역할 타로 방
-          </div>
-        </div>
-      ),
-      {
-        width: 1200,
-        height: 630,
-      }
-    );
-  }
+}
 }
