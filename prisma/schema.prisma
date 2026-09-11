@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Room {
+  id          String   @id @default(cuid())
+  question    String
+  hostToken   String   @unique
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+  cards       Card[]
+
+  @@index([expiresAt])
+}
+
+model Card {
+  id          String   @id @default(cuid())
+  roomId      String
+  room        Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  cardType    String
+  nickname    String?
+  reading     String
+  isHidden    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([roomId])
+}
