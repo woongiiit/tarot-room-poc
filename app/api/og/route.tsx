@@ -5,18 +5,9 @@ import { LANDING_TITLE, LANDING_TAGLINE } from '@/lib/copy';
 export const runtime = 'edge';
 
 const CARD_EMOJIS: Record<string, string> = {
-  '안전기지': '🏠',
-  '도화선': '💥',
-  '거울': '🪞',
-  '배터리': '🔋',
-  '네비': '🧭',
-  '방패': '🛡️',
-  '개그담당': '😄',
-  '솔직봇': '💬',
-  '거리두기': '↔️',
-  '썸온도': '🌡️',
-  '멘토': '📚',
-  '라이벌': '⚔️',
+    '안전기지': '🏠', '도화선': '💥', '거울': '🪞', '배터리': '🔋',
+    '네비': '🧭', '방패': '🛡️', '개그담당': '😄', '솔직봇': '💬',
+    '거리두기': '↔️', '썸온도': '🌡️', '멘토': '📚', '라이벌': '⚔️',
 };
 
 export async function GET(request: NextRequest) {
@@ -32,7 +23,7 @@ export async function GET(request: NextRequest) {
 
     if (roomId) {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_BASE_URL || process.env.APP_URL || (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : 'http://localhost:3000');
         const response = await fetch(`${baseUrl}/api/rooms/${roomId}`, {
           cache: 'no-store',
         });

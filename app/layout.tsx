@@ -5,7 +5,17 @@ import { LANDING_TITLE, LANDING_DESCRIPTION, BUILD_VERSION } from '@/lib/copy';
 // Build version: forces Railway cache invalidation
 console.log('Build version:', BUILD_VERSION);
 
+const getMetadataBase = (): string | undefined => {
+    if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
+    if (process.env.APP_URL) return process.env.APP_URL;
+    if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+    if (process.env.RAILWAY_PUBLIC_DOMAIN) return `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`;
+    return undefined;
+};
+
+
 export const metadata: Metadata = {
+  metadataBase: getMetadataBase() ? new URL(getMetadataBase()!) : undefined,
   title: LANDING_TITLE,
   description: LANDING_DESCRIPTION,
   openGraph: {
@@ -29,16 +39,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="ko">
-      <body className="antialiased">
-        {children}
-      </body>
-    </html>
-  );
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+    return (
+          <html lang="ko">
+        <body className="antialiased">{children}</body>
+            </html>
+        );
 }
