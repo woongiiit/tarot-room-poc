@@ -58,9 +58,10 @@ NEXT_PUBLIC_BASE_URL="http://localhost:3000"
 
 4. Set up the database:
 ```bash
-npx prisma migrate dev --name init
-npx prisma generate
+npx prisma migrate dev
 ```
+
+This will create and apply migrations, and generate the Prisma Client.
 
 5. Run the development server:
 ```bash
@@ -106,19 +107,10 @@ Railway will automatically:
 1. Install dependencies
 2. Run `prisma generate`
 3. Build the Next.js app
-4. Start the server
+4. Run database migrations (`prisma migrate deploy`)
+5. Start the server
 
-### Step 5: Run Database Migrations
-
-After first deployment, run migrations in Railway's terminal:
-```bash
-npx prisma migrate deploy
-```
-
-Or use Railway CLI:
-```bash
-railway run npx prisma migrate deploy
-```
+**Note**: The start command now automatically applies database migrations before starting the server, so no manual migration step is needed after deployment.
 
 ## 🔑 Environment Variables Reference
 

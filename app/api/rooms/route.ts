@@ -43,7 +43,13 @@ export async function POST(request: Request) {
       expiresAt: room.expiresAt.toISOString(),
     });
   } catch (error) {
-    console.error('Error creating room:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : '';
+    console.error('Error creating room:', {
+      message: errorMessage,
+      stack: errorStack,
+      error
+    });
     return NextResponse.json(
       { error: '방 생성 중 오류가 발생했습니다.' },
       { status: 500 }
