@@ -53,11 +53,11 @@ export default function Home() {
           <h1 className="text-4xl font-bold mb-4 gold-accent tracking-wide">
             관계 역할 타로 방
           </h1>
-          <p className="text-xl text-gray-200 mb-3 font-medium">
-            나는 너에게 어떤 존재일까?
+          <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">
+            너는 나한테 어떤 사람?
           </p>
-          <p className="text-sm text-gray-400">
-            12가지 관계 역할 메타포로 알아보세요
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            타로 한 장으로 말해줘
           </p>
         </div>
 
