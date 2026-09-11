@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Room {
+  id          String   @id @default(cuid())
+  question    String
+  creatorToken String
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+  picks       Pick[]
+
+  @@index([createdAt])
+  @@index([expiresAt])
+}
+
+model Pick {
+  id        String   @id @default(cuid())
+  roomId    String
+  cardKey   String
+  roleLine  String
+  nickname  String?
+  createdAt DateTime @default(now())
+  
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@index([roomId])
+  @@index([createdAt])
+}
