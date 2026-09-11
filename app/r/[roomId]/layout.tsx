@@ -21,20 +21,40 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     const room = await response.json();
+    
+    // Determine title and description based on whether cards exist
+    let title = room.question;
+    let description = '당신은 그 사람에게 어떤 존재인가요? 12가지 관계 역할 메타포로 알아보세요.';
+    
+    if (room.cards && room.cards.length > 0) {
+      const firstCard = room.cards[0];
+      const nickname = firstCard.nickname || '익명';
+      title = `${nickname}의 타로 — 너는 나한테 ${firstCard.cardType}`;
+      description = firstCard.reading.substring(0, 100) + '...';
+    }
 
     return {
-      title: `${room.question} | 관계 역할 타로 방`,
-      description: '당신은 그 사람에게 어떤 존재인가요? 12가지 관계 역할 메타포로 알아보세요.',
+      title: `${title} | 관계 역할 타로 방`,
+      description,
       openGraph: {
-        title: room.question,
-        description: '당신은 그 사람에게 어떤 존재인가요? 12가지 관계 역할 메타포로 알아보세요.',
+        title,
+        description,
         type: 'website',
         locale: 'ko_KR',
+        images: [
+          {
+            url: `/api/og?roomId=${roomId}`,
+            width: 1200,
+            height: 630,
+            alt: title,
+          },
+        ],
       },
       twitter: {
         card: 'summary_large_image',
-        title: room.question,
-        description: '당신은 그 사람에게 어떤 존재인가요? 12가지 관계 역할 메타포로 알아보세요.',
+        title,
+        description,
+        images: [`/api/og?roomId=${roomId}`],
       },
     };
   } catch (error) {

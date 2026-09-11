@@ -53,6 +53,7 @@ Edit `.env` with your configuration:
 ```env
 DATABASE_URL="postgresql://user:password@localhost:5432/tarot_room"
 HUGGINGFACE_TOKEN="your_huggingface_token_here"
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
 NEXT_PUBLIC_BASE_URL="http://localhost:3000"
 ```
 
@@ -94,7 +95,8 @@ Add the following environment variables in Railway:
 
 **Optional:**
 - `HF_MODEL_ID` - Hugging Face model ID (default: `meta-llama/Llama-3.3-70B-Instruct`)
-- `NEXT_PUBLIC_BASE_URL` - Your Railway app URL (e.g., `https://your-app.railway.app`)
+- `NEXT_PUBLIC_APP_URL` - Your Railway app URL for OG tags (e.g., `https://tarot-room-poc-production.up.railway.app`)
+- `NEXT_PUBLIC_BASE_URL` - Legacy base URL (use `NEXT_PUBLIC_APP_URL` instead)
 
 **Alternative LLM (if not using Hugging Face):**
 - `OPENAI_API_KEY` - OpenAI API key
@@ -122,7 +124,8 @@ Railway will automatically:
 | `OPENAI_API_KEY` | ⭐ | - | OpenAI API key (fallback LLM) |
 | `OPENAI_BASE_URL` | ❌ | `https://api.openai.com/v1` | OpenAI API endpoint |
 | `OPENAI_MODEL` | ❌ | `gpt-4o-mini` | OpenAI model name |
-| `NEXT_PUBLIC_BASE_URL` | ❌ | `http://localhost:3000` | App base URL for OG tags |
+| `NEXT_PUBLIC_APP_URL` | ⚠️ | Auto-detected | Public URL for absolute OG image tags (set in production) |
+| `NEXT_PUBLIC_BASE_URL` | ❌ | `http://localhost:3000` | Legacy base URL for API calls |
 
 ⭐ At least one LLM configuration is recommended. If neither is provided, deterministic Korean templates are used as fallback.
 
