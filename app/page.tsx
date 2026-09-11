@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { LANDING_TITLE, LANDING_TAGLINE } from '@/lib/copy';
 
 export default function Home() {
   const [question, setQuestion] = useState('');
@@ -54,10 +55,10 @@ export default function Home() {
             관계 역할 타로 방
           </h1>
           <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">
-            너는 나한테 어떤 사람?
+            {LANDING_TITLE}
           </p>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            타로 한 장으로 말해줘
+            {LANDING_TAGLINE}
           </p>
         </div>
 
