@@ -3,51 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import ShareButton from '@/components/ShareButton';
-
-const CARD_TYPES = [
-  '안전기지',
-  '도화선',
-  '거울',
-  '배터리',
-  '네비',
-  '방패',
-  '개그담당',
-  '솔직봇',
-  '거리두기',
-  '썸온도',
-  '멘토',
-  '라이벌',
-];
-
-const CARD_EMOJIS: Record<string, string> = {
-  '안전기지': '☽',
-  '도화선': '✶',
-  '거울': '◈',
-  '배터리': '⚡',
-  '네비': '✦',
-  '방패': '☬',
-  '개그담당': '🎭',
-  '솔직봇': '✎',
-  '거리두기': '◌',
-  '썸온도': '❣',
-  '멘토': '📖',
-  '라이벌': '⚔',
-};
-
-const CARD_COLORS: Record<string, { accent: string; bg: string; border: string }> = {
-  '안전기지': { accent: '#9333ea', bg: 'bg-purple-900/20', border: 'border-purple-500/50' },
-  '도화선': { accent: '#dc2626', bg: 'bg-red-900/20', border: 'border-red-500/50' },
-  '거울': { accent: '#0891b2', bg: 'bg-cyan-900/20', border: 'border-cyan-500/50' },
-  '배터리': { accent: '#eab308', bg: 'bg-yellow-900/20', border: 'border-yellow-500/50' },
-  '네비': { accent: '#3b82f6', bg: 'bg-blue-900/20', border: 'border-blue-500/50' },
-  '방패': { accent: '#059669', bg: 'bg-emerald-900/20', border: 'border-emerald-500/50' },
-  '개그담당': { accent: '#f59e0b', bg: 'bg-amber-900/20', border: 'border-amber-500/50' },
-  '솔직봇': { accent: '#8b5cf6', bg: 'bg-violet-900/20', border: 'border-violet-500/50' },
-  '거리두기': { accent: '#6b7280', bg: 'bg-gray-900/20', border: 'border-gray-500/50' },
-  '썸온도': { accent: '#ec4899', bg: 'bg-pink-900/20', border: 'border-pink-500/50' },
-  '멘토': { accent: '#10b981', bg: 'bg-green-900/20', border: 'border-green-500/50' },
-  '라이벌': { accent: '#ef4444', bg: 'bg-rose-900/20', border: 'border-rose-500/50' },
-};
+import { 
+  CARD_TYPES, 
+  CARD_EMOJIS, 
+  CARD_COLORS, 
+  getFrontImageSrc, 
+  getBackImageSrc 
+} from '@/lib/cards';
 
 interface Card {
   id: string;
@@ -340,7 +302,7 @@ export default function RoomPage() {
                       className="w-full aspect-[2/3] flex items-center justify-center relative"
                     >
                       <img
-                        src="/cards/back.webp"
+                        src={getBackImageSrc()}
                         alt="Tarot card back"
                         className="absolute inset-0 w-full h-full object-cover rounded-lg"
                         onError={(e) => {
@@ -423,8 +385,39 @@ export default function RoomPage() {
                       borderColor: `${colors.accent}30`
                     }}
                   >
-                    <div className="text-6xl mb-3" style={{ color: colors.accent }}>
-                      {CARD_EMOJIS[card.cardType]}
+                    {/* Front card image with emoji fallback */}
+                    <div className="flex justify-center mb-3">
+                      <div className="relative w-32 h-48">
+                        <img
+                          src={getFrontImageSrc(card.cardType)}
+                          alt={card.cardType}
+                          className="absolute inset-0 w-full h-full object-cover rounded-lg border-2"
+                          style={{ 
+                            borderColor: colors.accent,
+                            boxShadow: `0 4px 12px rgba(0, 0, 0, 0.3), 0 0 0 1px ${colors.accent}60`
+                          }}
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            const fallback = e.currentTarget.nextElementSibling;
+                            if (fallback instanceof HTMLElement) {
+                              fallback.style.display = 'flex';
+                            }
+                          }}
+                        />
+                        {/* Emoji fallback */}
+                        <div 
+                          className="absolute inset-0 items-center justify-center rounded-lg border-2"
+                          style={{ 
+                            display: 'none',
+                            background: 'linear-gradient(135deg, #2d1b4e 0%, #1a0b2e 100%)',
+                            borderColor: colors.accent
+                          }}
+                        >
+                          <div className="text-6xl" style={{ color: colors.accent }}>
+                            {CARD_EMOJIS[card.cardType]}
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <h3 className="text-2xl font-bold gold-accent mb-2">
                       {card.cardType}
