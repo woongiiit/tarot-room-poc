@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import ShareButton from '@/components/ShareButton';
 
 const CARD_TYPES = [
   '안전기지',
@@ -76,7 +77,6 @@ export default function RoomPage() {
   const [nickname, setNickname] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isHost, setIsHost] = useState(false);
-  const [showCopied, setShowCopied] = useState(false);
 
   useEffect(() => {
     loadRoom();
@@ -158,13 +158,6 @@ export default function RoomPage() {
     }
   };
 
-  const handleCopyLink = () => {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url);
-    setShowCopied(true);
-    setTimeout(() => setShowCopied(false), 2000);
-  };
-
   const handleHideCard = async (cardId: string) => {
     if (!confirm('이 카드를 숨기시겠습니까?')) return;
 
@@ -185,6 +178,32 @@ export default function RoomPage() {
     } catch (err) {
       alert(err instanceof Error ? err.message : '카드 숨기기에 실패했습니다.');
     }
+  };
+
+  const getShareMetadata = () => {
+    if (!room) {
+      return {
+        title: '타로 방',
+        description: '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.',
+      };
+    }
+
+    if (room.cards.length > 0) {
+      const latestCard = room.cards[room.cards.length - 1];
+      const cardName = latestCard.cardType;
+      const nickname = latestCard.nickname;
+      const line = latestCard.reading.split('\n').find((l) => l.trim()) || '';
+      
+      return {
+        title: nickname ? `${nickname}의 타로 — 너는 나한테 ${cardName}` : `타로 — 너는 나한테 ${cardName}`,
+        description: line ? `${line}. 링크 열고 네 카드도 뽑아봐.` : '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.',
+      };
+    }
+
+    return {
+      title: room.question,
+      description: '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.',
+    };
   };
 
   if (loading) {
@@ -226,6 +245,8 @@ export default function RoomPage() {
     cardType => !room.cards.some(card => card.cardType === cardType)
   );
 
+  const shareMetadata = getShareMetadata();
+
   return (
     <div className="min-h-screen relative" style={{ paddingBottom: '2rem' }}>
       <div className="container mx-auto px-4 py-8 max-w-2xl relative z-10">
@@ -244,12 +265,13 @@ export default function RoomPage() {
 
           {isHost && (
             <div className="flex gap-2 mt-4 pt-4 border-t border-gray-700">
-              <button
-                onClick={handleCopyLink}
-                className="flex-1 bg-purple-900/40 hover:bg-purple-800/60 border border-purple-500/30 text-purple-200 font-medium py-2 px-4 rounded-lg transition text-sm"
-              >
-                {showCopied ? '✓ 복사됨!' : '✦ 링크 복사'}
-              </button>
+              <ShareButton
+                roomId={roomId}
+                title={shareMetadata.title}
+                description={shareMetadata.description}
+                variant="kakao"
+                className="flex-1"
+              />
               <button
                 onClick={handleDeleteRoom}
                 className="flex-1 bg-red-900/40 hover:bg-red-800/60 border border-red-500/30 text-red-200 font-medium py-2 px-4 rounded-lg transition text-sm"
@@ -273,6 +295,20 @@ export default function RoomPage() {
           >
             {showPicker ? '✕ 선택 취소' : '✦ 카드 뽑기'}
           </button>
+        )}
+
+        {/* Share Section for non-host users */}
+        {!isHost && (
+          <div className="tarot-card rounded-2xl p-4 mb-6">
+            <p className="text-sm text-gray-400 text-center mb-3">친구들과 함께 카드를 뽑아보세요</p>
+            <ShareButton
+              roomId={roomId}
+              title={shareMetadata.title}
+              description={shareMetadata.description}
+              variant="kakao"
+              className="w-full"
+            />
+          </div>
         )}
 
         {/* Card Picker */}
