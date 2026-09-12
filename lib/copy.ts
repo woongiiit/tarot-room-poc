@@ -22,4 +22,4 @@ export const LANDING_TAGLINE = '\uD0C0\uB85C\u0020\uD55C\u0020\uC7A5\uC73C\uB85C
 export const FIXED_ROOM_QUESTION = '\uB108\uB294\u0020\uB098\uD55C\uD14C\u0020\uC5B4\uB5A4\u0020\uC0AC\uB78C\u003F';
 
 // Build version marker to force cache invalidation
-export const BUILD_VERSION = '2026-09-12-001';
+export const BUILD_VERSION = '2026-09-12-002';
