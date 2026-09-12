@@ -75,7 +75,7 @@ export default function ShareButton({
     }
 
     const roomUrl = getRoomUrl();
-    const finalImageUrl = imageUrl || `${window.location.origin}/api/og?roomId=${roomId}`;
+    const finalImageUrl = imageUrl || `${window.location.origin}/share/kakao-card.webp`;
 
     try {
       window.Kakao.Share.sendDefault({

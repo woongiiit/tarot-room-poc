@@ -149,6 +149,7 @@ The app supports viral KakaoTalk one-tap sharing when configured:
 - **Smart Metadata**: Share content adapts based on latest picked card
 - **Host & Visitor Sharing**: Both room creators and visitors can share
 - **Korean UX**: "카톡으로 공유" button with Kakao yellow branding
+- **Kakao Card Image**: Default share image is `/share/kakao-card.webp` (1080×1080) for optimal Kakao feed display
 
 ## 🧪 Testing
 
