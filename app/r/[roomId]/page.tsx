@@ -338,16 +338,29 @@ export default function RoomPage() {
                   >
                     <div 
                       className="w-full aspect-[2/3] flex items-center justify-center relative"
-                      style={{
-                        background: 'linear-gradient(135deg, #2d1b4e 0%, #1a0b2e 100%)'
-                      }}
                     >
-                      {/* Card back pattern */}
-                      <div className="text-4xl" style={{ 
-                        color: 'var(--tarot-gold)',
-                        opacity: isSelected ? 0.8 : 0.5
-                      }}>
-                        ✦
+                      <img
+                        src="/cards/back.webp"
+                        alt="Tarot card back"
+                        className="absolute inset-0 w-full h-full object-cover rounded-lg"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          const fallback = e.currentTarget.nextElementSibling;
+                          if (fallback) fallback.classList.remove('hidden');
+                        }}
+                      />
+                      <div 
+                        className="hidden absolute inset-0 flex items-center justify-center"
+                        style={{
+                          background: 'linear-gradient(135deg, #2d1b4e 0%, #1a0b2e 100%)'
+                        }}
+                      >
+                        <div className="text-4xl" style={{ 
+                          color: 'var(--tarot-gold)',
+                          opacity: isSelected ? 0.8 : 0.5
+                        }}>
+                          ✦
+                        </div>
                       </div>
                     </div>
                   </button>
