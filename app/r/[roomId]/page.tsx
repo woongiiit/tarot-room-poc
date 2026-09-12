@@ -284,28 +284,35 @@ export default function RoomPage() {
             <p className="text-sm text-gray-400 text-center mb-6">마음이 끌리는 카드 하나를 고르세요</p>
 
             <div className="grid grid-cols-3 gap-3 mb-6">
-              {availableCards.map((cardType) => {
-                const colors = CARD_COLORS[cardType];
+              {availableCards.map((cardType, index) => {
                 const isSelected = selectedCard === cardType;
                 return (
                   <button
                     key={cardType}
                     onClick={() => setSelectedCard(cardType)}
-                    className={`tarot-card-mini rounded-lg p-4 transition-all ${
-                      isSelected ? colors.border : ''
-                    }`}
+                    className="relative rounded-lg transition-all overflow-hidden"
                     style={isSelected ? { 
-                      borderColor: colors.accent,
-                      boxShadow: `0 0 20px ${colors.accent}60`
-                    } : {}}
+                      borderColor: 'var(--tarot-gold)',
+                      boxShadow: '0 0 24px rgba(212, 175, 55, 0.6)',
+                      border: '2px solid var(--tarot-gold)'
+                    } : {
+                      border: '2px solid var(--tarot-gold-dim)'
+                    }}
+                    aria-label={`카드 ${index + 1}`}
                   >
-                    <div className="text-3xl mb-2 text-center" style={{ 
-                      color: isSelected ? colors.accent : 'var(--tarot-gold)'
-                    }}>
-                      {CARD_EMOJIS[cardType]}
-                    </div>
-                    <div className="text-xs font-medium text-gray-300 text-center">
-                      {cardType}
+                    <div 
+                      className="w-full aspect-[2/3] flex items-center justify-center relative"
+                      style={{
+                        background: 'linear-gradient(135deg, #2d1b4e 0%, #1a0b2e 100%)'
+                      }}
+                    >
+                      {/* Card back pattern */}
+                      <div className="text-4xl" style={{ 
+                        color: 'var(--tarot-gold)',
+                        opacity: isSelected ? 0.8 : 0.5
+                      }}>
+                        ✦
+                      </div>
                     </div>
                   </button>
                 );
