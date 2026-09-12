@@ -1,25 +1,23 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { randomBytes } from 'crypto';
+import { FIXED_ROOM_QUESTION } from '@/lib/copy';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { question } = body;
 
-    if (!question || typeof question !== 'string' || question.trim().length === 0) {
+    // Enforce fixed question - reject if client attempts to override
+    if (question && question !== FIXED_ROOM_QUESTION) {
       return NextResponse.json(
-        { error: '질문을 입력해주세요.' },
+        { error: '잘못된 요청입니다.' },
         { status: 400 }
       );
     }
 
-    if (question.length > 200) {
-      return NextResponse.json(
-        { error: '질문은 200자 이내로 입력해주세요.' },
-        { status: 400 }
-      );
-    }
+    // Always use the fixed question
+    const finalQuestion = FIXED_ROOM_QUESTION;
 
     // Generate host token
     const hostToken = randomBytes(32).toString('hex');
@@ -30,7 +28,7 @@ export async function POST(request: Request) {
 
     const room = await prisma.room.create({
       data: {
-        question: question.trim(),
+        question: finalQuestion,
         hostToken,
         expiresAt,
       },

@@ -183,7 +183,7 @@ export default function RoomPage() {
   const getShareMetadata = () => {
     if (!room) {
       return {
-        title: '타로 방',
+        title: '사이타로',
         description: '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.',
       };
     }
@@ -195,13 +195,13 @@ export default function RoomPage() {
       const line = latestCard.reading.split('\n').find((l) => l.trim()) || '';
       
       return {
-        title: nickname ? `${nickname}의 타로 — 너는 나한테 ${cardName}` : `타로 — 너는 나한테 ${cardName}`,
+        title: nickname ? `${nickname} — 너는 나한테 ${cardName}` : `너는 나한테 ${cardName}`,
         description: line ? `${line}. 링크 열고 네 카드도 뽑아봐.` : '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.',
       };
     }
 
     return {
-      title: room.question,
+      title: '너는 나한테 어떤 사람?',
       description: '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.',
     };
   };

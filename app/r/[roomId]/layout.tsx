@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { BRAND_NAME } from '@/lib/copy';
 
 interface Props {
     params: Promise<{ roomId: string }>;
@@ -10,7 +11,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_BASE_URL || process.env.APP_URL || (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : 'http://localhost:3000');
           const response = await fetch(`${baseUrl}/api/rooms/${roomId}`, { cache: 'no-store' });
           if (!response.ok) {
-                  return { title: '타로 방', description: '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.' };
+                  return { title: BRAND_NAME, description: '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.' };
           }
           const room = await response.json();
           const siteUrl = baseUrl;
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
                   description = '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.';
           }
           return {
-                  title: `${title} | 타로 방`,
+                  title: `${title} | ${BRAND_NAME}`,
                   description,
                   openGraph: {
                             title,
@@ -45,7 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           };
     } catch (error) {
           console.error('Error generating metadata:', error);
-          return { title: '타로 방', description: '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.' };
+          return { title: BRAND_NAME, description: '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.' };
     }
 }
 

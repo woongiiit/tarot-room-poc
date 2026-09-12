@@ -1,10 +1,10 @@
-# 🔮 관계 역할 타로 방 (Relationship Role Tarot Room)
+# 🔮 사이타로 (Saitaro)
 
-당신은 그 사람에게 어떤 존재인가요? 12가지 관계 역할 메타포로 알아보세요.
+너는 나한테 어떤 사람? 12가지 관계 역할 메타포로 알아보세요.
 
 ## 🌟 Features
 
-- **방 생성**: 질문을 입력하고 공유 가능한 방 생성
+- **방 생성**: 원클릭으로 공유 가능한 방 생성
 - **카드 선택**: 12가지 관계 역할 메타포 카드 중 선택
 - **AI 해석**: LLM을 통한 2인칭 관계 역할 해석
 - **카톡 공유**: KakaoTalk 원탭 공유 (SDK 키 설정 시)
@@ -162,7 +162,7 @@ curl https://your-app.railway.app/api/health
 ```bash
 curl -X POST https://your-app.railway.app/api/rooms \
   -H "Content-Type: application/json" \
-  -d '{"question":"나는 친구에게 어떤 존재일까?"}'
+  -d '{"question":"너는 나한테 어떤 사람?"}'
 ```
 
 ### Pick Card
@@ -175,7 +175,7 @@ curl -X POST https://your-app.railway.app/api/rooms/{roomId}/cards \
 ## 📝 API Endpoints
 
 - `GET /api/health` - Health check
-- `POST /api/rooms` - Create a new room
+- `POST /api/rooms` - Create a new room (fixed question: "너는 나한테 어떤 사람?")
 - `GET /api/rooms/[id]` - Get room details
 - `POST /api/rooms/[id]/cards` - Pick a card
 - `DELETE /api/rooms/[id]` - Delete room (requires `x-host-token` header)
@@ -186,7 +186,7 @@ curl -X POST https://your-app.railway.app/api/rooms/{roomId}/cards \
 ```prisma
 model Room {
   id          String   @id @default(cuid())
-  question    String
+  question    String   // Fixed: "너는 나한테 어떤 사람?"
   hostToken   String   @unique
   createdAt   DateTime @default(now())
   expiresAt   DateTime
@@ -222,7 +222,7 @@ The app uses a 3-tier LLM strategy:
 
 ## 🎯 User Flow
 
-1. **Host** creates room with a question → gets shareable URL
+1. **Host** creates room (fixed question: "너는 나한테 어떤 사람?") → gets shareable URL
 2. **Visitors** access URL → pick 1 of 12 metaphor cards
 3. **LLM** generates 2nd-person reading based on card & question
 4. **All users** see all picked cards on the same URL
@@ -232,7 +232,7 @@ The app uses a 3-tier LLM strategy:
 ## 🔒 Privacy
 
 - No login required
-- Collected data: question, selected card, nickname (optional)
+- Collected data: selected card, nickname (optional)
 - Rooms automatically expire after 7 days
 - Host can delete room anytime with host token
 
@@ -242,4 +242,4 @@ MIT
 
 ## 🙏 Credits
 
-Built as a PoC for Korean Kakao-viral web app experience.
+Built as a PoC (saitaro) for Korean Kakao-viral web app experience.

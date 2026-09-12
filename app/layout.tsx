@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { LANDING_TITLE, LANDING_DESCRIPTION, BUILD_VERSION } from '@/lib/copy';
+import { BRAND_NAME, LANDING_TITLE, LANDING_DESCRIPTION, BUILD_VERSION } from '@/lib/copy';
 
 // Build version: forces Railway cache invalidation
 console.log('Build version:', BUILD_VERSION);
@@ -28,7 +28,13 @@ export const metadata: Metadata = {
         url: '/api/og',
         width: 1200,
         height: 630,
-        alt: '타로 방',
+        alt: BRAND_NAME,
+      },
+      {
+        url: '/og-template.webp',
+        width: 1200,
+        height: 630,
+        alt: BRAND_NAME,
       },
     ],
   },
@@ -36,6 +42,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: LANDING_TITLE,
     description: LANDING_DESCRIPTION,
+    images: ['/api/og', '/og-template.webp'],
   },
 };
 

@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
-import { LANDING_TITLE, LANDING_TAGLINE } from '@/lib/copy';
+import { BRAND_NAME, LANDING_TITLE, LANDING_TAGLINE } from '@/lib/copy';
 
 export const runtime = 'edge';
 
@@ -41,9 +41,9 @@ export async function GET(request: NextRequest) {
             hook = lines[0] || '';
             
             if (nickname) {
-              title = `${nickname}의 타로 — 너는 나한테 ${cardName}`;
+              title = `${nickname} — 너는 나한테 ${cardName}`;
             } else {
-              title = `타로 — 너는 나한테 ${cardName}`;
+              title = `너는 나한테 ${cardName}`;
             }
           } else {
             const questionLines = room.question.split('\n');
