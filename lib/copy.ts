@@ -5,8 +5,8 @@
  * Team-approved exact escapes - do not modify.
  */
 
-// 너는 나한테
-export const BRAND_NAME = '\uB108\uB294\u0020\uB098\uD55C\uD14C';
+// 사이타로
+export const BRAND_NAME = '\uC0AC\uC774\uD0C0\uB85C';
 
 // 너는 나한테 어떤 사람?
 export const LANDING_TITLE = '\uB108\uB294\u0020\uB098\uD55C\uD14C\u0020\uC5B4\uB5A4\u0020\uC0AC\uB78C\u003F';

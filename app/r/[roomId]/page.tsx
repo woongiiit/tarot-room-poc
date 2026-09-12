@@ -183,7 +183,7 @@ export default function RoomPage() {
   const getShareMetadata = () => {
     if (!room) {
       return {
-        title: '너는 나한테',
+        title: '사이타로',
         description: '타로 한 장으로 말해줘. 링크 열고 네 카드도 뽑아봐.',
       };
     }
