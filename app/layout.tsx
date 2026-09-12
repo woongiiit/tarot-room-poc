@@ -42,6 +42,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
           <html lang="ko">
+        <head>
+          <script
+            src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
+            integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK/vSMPPO+Kfu7Ba/4r10L+8I"
+            crossOrigin="anonymous"
+            async
+          ></script>
+        </head>
         <body className="antialiased">{children}</body>
             </html>
         );

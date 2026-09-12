@@ -7,7 +7,8 @@
 - **방 생성**: 질문을 입력하고 공유 가능한 방 생성
 - **카드 선택**: 12가지 관계 역할 메타포 카드 중 선택
 - **AI 해석**: LLM을 통한 2인칭 관계 역할 해석
-- **공유**: 링크를 통해 여러 사람과 공유
+- **카톡 공유**: KakaoTalk 원탭 공유 (SDK 키 설정 시)
+- **공유**: 링크를 통해 여러 사람과 공유 (Web Share API & 복사 fallback)
 - **호스트 기능**: 방 삭제 및 카드 숨기기
 - **자동 만료**: 7일 후 자동 만료
 
@@ -55,6 +56,8 @@ DATABASE_URL="postgresql://user:password@localhost:5432/tarot_room"
 HUGGINGFACE_TOKEN="your_huggingface_token_here"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 NEXT_PUBLIC_BASE_URL="http://localhost:3000"
+# Optional: Enable KakaoTalk share
+# NEXT_PUBLIC_KAKAO_JS_KEY="your_kakao_javascript_key_here"
 ```
 
 4. Set up the database:
@@ -126,8 +129,26 @@ Railway will automatically:
 | `OPENAI_MODEL` | ❌ | `gpt-4o-mini` | OpenAI model name |
 | `NEXT_PUBLIC_APP_URL` | ⚠️ | Auto-detected | Public URL for absolute OG image tags (set in production) |
 | `NEXT_PUBLIC_BASE_URL` | ❌ | `http://localhost:3000` | Legacy base URL for API calls |
+| `NEXT_PUBLIC_KAKAO_JS_KEY` | ❌ | - | Kakao JavaScript SDK key for one-tap share ([Get from Kakao Developers](https://developers.kakao.com/console/app)) |
 
 ⭐ At least one LLM configuration is recommended. If neither is provided, deterministic Korean templates are used as fallback.
+
+## 🔗 KakaoTalk Share Integration
+
+The app supports viral KakaoTalk one-tap sharing when configured:
+
+1. **Get Kakao JavaScript Key**: Create an app at [Kakao Developers Console](https://developers.kakao.com/console/app) and get your JavaScript key
+2. **Set Environment Variable**: Add `NEXT_PUBLIC_KAKAO_JS_KEY` to your `.env` file
+3. **Automatic Fallback**: If the key is not set or Kakao SDK fails to load:
+   - Mobile devices: Uses Web Share API
+   - Desktop/fallback: Copy-to-clipboard
+
+### Share Features
+
+- **OG Tag Integration**: Automatically uses room's Open Graph title, description, and image
+- **Smart Metadata**: Share content adapts based on latest picked card
+- **Host & Visitor Sharing**: Both room creators and visitors can share
+- **Korean UX**: "카톡으로 공유" button with Kakao yellow branding
 
 ## 🧪 Testing
 
