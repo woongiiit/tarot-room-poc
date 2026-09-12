@@ -74,6 +74,7 @@ export default function RoomPage() {
   const [error, setError] = useState('');
   const [showPicker, setShowPicker] = useState(false);
   const [selectedCard, setSelectedCard] = useState('');
+  const [flippingCard, setFlippingCard] = useState('');
   const [nickname, setNickname] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isHost, setIsHost] = useState(false);
@@ -102,9 +103,20 @@ export default function RoomPage() {
     }
   };
 
-  const handlePickCard = async () => {
-    if (!selectedCard) return;
+  const handleCardClick = async (cardType: string) => {
+    if (isSubmitting || flippingCard) return;
+    
+    // Start flip animation
+    setSelectedCard(cardType);
+    setFlippingCard(cardType);
+    
+    // Wait for flip animation to complete (600ms)
+    setTimeout(async () => {
+      await handlePickCard(cardType);
+    }, 600);
+  };
 
+  const handlePickCard = async (cardType: string) => {
     setIsSubmitting(true);
     setError('');
 
@@ -113,7 +125,7 @@ export default function RoomPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          cardType: selectedCard,
+          cardType: cardType,
           nickname: nickname.trim() || undefined,
         }),
       });
@@ -127,9 +139,11 @@ export default function RoomPage() {
       await loadRoom();
       setShowPicker(false);
       setSelectedCard('');
+      setFlippingCard('');
       setNickname('');
     } catch (err) {
       setError(err instanceof Error ? err.message : '카드 선택에 실패했습니다.');
+      setFlippingCard('');
     } finally {
       setIsSubmitting(false);
     }
@@ -317,49 +331,88 @@ export default function RoomPage() {
             <h2 className="text-xl font-bold gold-accent mb-2 text-center">
               카드를 선택하세요
             </h2>
-            <p className="text-sm text-gray-400 text-center mb-6">마음이 끌리는 카드 하나를 고르세요</p>
+            <p className="text-sm text-gray-400 text-center mb-4">마음이 끌리는 카드 하나를 탭하세요</p>
 
-            <div className="grid grid-cols-3 gap-3 mb-6">
+            <input
+              type="text"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              placeholder="닉네임 (선택사항)"
+              maxLength={20}
+              className="w-full px-4 py-2.5 border border-gray-700 rounded-lg mb-4 focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-900/50 text-white placeholder-gray-500 text-sm"
+              disabled={isSubmitting}
+            />
+
+            <div className="grid grid-cols-3 gap-3 mb-4">
               {availableCards.map((cardType, index) => {
-                const isSelected = selectedCard === cardType;
+                const isFlipping = flippingCard === cardType;
+                const colors = CARD_COLORS[cardType];
                 return (
                   <button
                     key={cardType}
-                    onClick={() => setSelectedCard(cardType)}
-                    className="relative rounded-lg transition-all overflow-hidden"
-                    style={isSelected ? { 
-                      borderColor: 'var(--tarot-gold)',
-                      boxShadow: '0 0 24px rgba(212, 175, 55, 0.6)',
-                      border: '2px solid var(--tarot-gold)'
-                    } : {
-                      border: '2px solid var(--tarot-gold-dim)'
+                    onClick={() => handleCardClick(cardType)}
+                    disabled={isSubmitting || !!flippingCard}
+                    className="relative rounded-lg transition-all overflow-hidden disabled:cursor-not-allowed"
+                    style={{
+                      border: '2px solid var(--tarot-gold-dim)',
+                      perspective: '1000px',
+                      minHeight: '140px'
                     }}
                     aria-label={`카드 ${index + 1}`}
                   >
                     <div 
-                      className="w-full aspect-[2/3] flex items-center justify-center relative"
+                      className="w-full aspect-[2/3] relative"
+                      style={{
+                        transformStyle: 'preserve-3d',
+                        transition: 'transform 0.6s',
+                        transform: isFlipping ? 'rotateY(180deg)' : 'rotateY(0deg)'
+                      }}
                     >
-                      <img
-                        src="/cards/back.webp"
-                        alt="Tarot card back"
-                        className="absolute inset-0 w-full h-full object-cover rounded-lg"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                          const fallback = e.currentTarget.nextElementSibling;
-                          if (fallback) fallback.classList.remove('hidden');
-                        }}
-                      />
+                      {/* Card Back */}
                       <div 
-                        className="hidden absolute inset-0 flex items-center justify-center"
+                        className="absolute inset-0 flex items-center justify-center"
                         style={{
-                          background: 'linear-gradient(135deg, #2d1b4e 0%, #1a0b2e 100%)'
+                          backfaceVisibility: 'hidden',
+                          WebkitBackfaceVisibility: 'hidden'
                         }}
                       >
-                        <div className="text-4xl" style={{ 
-                          color: 'var(--tarot-gold)',
-                          opacity: isSelected ? 0.8 : 0.5
-                        }}>
-                          ✦
+                        <img
+                          src="/cards/back.webp"
+                          alt="Tarot card back"
+                          className="absolute inset-0 w-full h-full object-cover rounded-lg"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            const fallback = e.currentTarget.nextElementSibling;
+                            if (fallback) fallback.classList.remove('hidden');
+                          }}
+                        />
+                        <div 
+                          className="hidden absolute inset-0 flex items-center justify-center rounded-lg"
+                          style={{
+                            background: 'linear-gradient(135deg, #2d1b4e 0%, #1a0b2e 100%)'
+                          }}
+                        >
+                          <div className="text-4xl" style={{ color: 'var(--tarot-gold)', opacity: 0.5 }}>
+                            ✦
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Card Front */}
+                      <div 
+                        className="absolute inset-0 flex flex-col items-center justify-center rounded-lg p-2"
+                        style={{
+                          backfaceVisibility: 'hidden',
+                          WebkitBackfaceVisibility: 'hidden',
+                          transform: 'rotateY(180deg)',
+                          background: `linear-gradient(135deg, ${colors.accent}40 0%, #1a0b2e 100%)`
+                        }}
+                      >
+                        <div className="text-3xl mb-1" style={{ color: colors.accent }}>
+                          {CARD_EMOJIS[cardType]}
+                        </div>
+                        <div className="text-xs font-bold gold-accent text-center leading-tight">
+                          {cardType}
                         </div>
                       </div>
                     </div>
@@ -368,33 +421,17 @@ export default function RoomPage() {
               })}
             </div>
 
-            <input
-              type="text"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              placeholder="닉네임 (선택사항)"
-              maxLength={20}
-              className="w-full px-4 py-3 border-2 border-gray-700 rounded-lg mb-4 focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-900/50 text-white placeholder-gray-500"
-            />
-
             {error && (
-              <div className="mb-4 p-3 bg-red-900/30 border border-red-500/50 text-red-300 rounded-lg text-sm">
+              <div className="p-3 bg-red-900/30 border border-red-500/50 text-red-300 rounded-lg text-sm">
                 {error}
               </div>
             )}
 
-            <button
-              onClick={handlePickCard}
-              disabled={!selectedCard || isSubmitting}
-              className="w-full gold-accent font-bold py-4 px-6 rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed"
-              style={{ 
-                background: selectedCard ? 'linear-gradient(135deg, rgba(109, 40, 217, 0.5) 0%, rgba(45, 27, 78, 0.7) 100%)' : 'rgba(75, 85, 99, 0.3)',
-                border: '2px solid var(--tarot-gold-dim)',
-                boxShadow: selectedCard ? '0 0 20px rgba(212, 175, 55, 0.3)' : 'none'
-              }}
-            >
-              {isSubmitting ? '처리 중...' : '✦ 선택 완료'}
-            </button>
+            {isSubmitting && (
+              <div className="text-center text-sm gold-accent py-2">
+                ✦ 카드를 선택하는 중...
+              </div>
+            )}
           </div>
         )}
 
