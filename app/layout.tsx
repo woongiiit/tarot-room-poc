@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     locale: 'ko_KR',
     images: [
       {
-        url: '/api/og',
+        url: '/og-template.webp',
         width: 1200,
         height: 630,
         alt: BRAND_NAME,
@@ -36,6 +36,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: LANDING_TITLE,
     description: LANDING_DESCRIPTION,
+    images: ['/og-template.webp'],
   },
 };
 
