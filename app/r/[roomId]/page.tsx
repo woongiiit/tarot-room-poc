@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import ShareButton from '@/components/ShareButton';
+import RelationshipGraph from '@/components/RelationshipGraph';
 
 const CARD_TYPES = [
   '안전기지',
@@ -309,6 +310,16 @@ export default function RoomPage() {
               className="w-full"
             />
           </div>
+        )}
+
+        {/* Relationship Graph */}
+        {room.cards.length > 0 && (
+          <RelationshipGraph
+            cards={room.cards}
+            centerLabel="나"
+            cardEmojis={CARD_EMOJIS}
+            cardColors={CARD_COLORS}
+          />
         )}
 
         {/* Card Picker */}
